@@ -2,7 +2,7 @@
 
 #include "api.h"
 
-#define MAX_LINE_LENGTH 53
+#define MAX_LINE_LENGTH 39
 #define TEXT_LINES 8
 
 namespace lcd2 {
@@ -34,8 +34,12 @@ void initialize() {
 
     text_view = lv_tabview_add_tab(tab_view, "Text");
     lv_page_set_sb_mode(text_view, LV_SB_MODE_OFF);
-    lv_style_copy(&text_style, &lv_style_plain);
+    lv_style_copy(&text_style, lv_theme_get_alien()->bg);
     text_style.text.font = &pros_font_dejavu_mono_20;
+    text_style.body.padding.hor = 5;
+    text_style.body.padding.ver = 5;
+    text_style.body.padding.inner = 5;
+    lv_obj_set_style(text_view, &text_style);
 
     for (int i = 0; i < TEXT_LINES; i++) {
         lines[i] = lv_label_create(text_view, NULL);
