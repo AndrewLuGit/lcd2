@@ -1,4 +1,4 @@
-#include "api.h"
+#include "selector.h"
 
 #define MAX_AUTONS 10
 
@@ -31,6 +31,10 @@ lv_res_t skills_btnm_action(lv_obj_t* btnm, const char* text) {
     auton = 0;
     render();
     return LV_RES_OK;
+}
+
+int get_auton() {
+    return auton;
 }
 
 void render() {
