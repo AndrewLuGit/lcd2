@@ -1,5 +1,7 @@
 #include "selector.h"
 
+#include "api.h"
+
 #define MAX_AUTONS 10
 
 namespace lcd2::selector {
@@ -14,6 +16,23 @@ lv_style_t blue_btnm_style;
 lv_style_t blue_btn_style;
 const char* map[MAX_AUTONS + 1] = {};
 const char* skills_map[] = {"Skills", ""};
+
+void render() {
+    printf("Auton: %d\n", auton);
+    if (auton == 0) { // skills
+        lv_btnm_set_toggle(red_btnm, false, 0);
+        lv_btnm_set_toggle(blue_btnm, false, 0);
+        lv_btnm_set_toggle(skills_btnm, true, 0);
+    } else if (auton > 0) { // red
+        lv_btnm_set_toggle(red_btnm, true, auton - 1);
+        lv_btnm_set_toggle(blue_btnm, false, 0);
+        lv_btnm_set_toggle(skills_btnm, false, 0);
+    } else { // blue
+        lv_btnm_set_toggle(red_btnm, false, 0);
+        lv_btnm_set_toggle(blue_btnm, true, -auton - 1);
+        lv_btnm_set_toggle(skills_btnm, false, 0);
+    }
+}
 
 lv_res_t red_btnm_action(lv_obj_t* btnm, const char* text) {
     auton = lv_btnm_get_pressed(btnm) + 1;
@@ -37,23 +56,7 @@ int get_auton() {
     return auton;
 }
 
-void render() {
-    if (auton = 0) { // skills
-        lv_btnm_set_toggle(red_btnm, false, 0);
-        lv_btnm_set_toggle(blue_btnm, false, 0);
-        lv_btnm_set_toggle(skills_btnm, true, 0);
-    } else if (auton > 0) { // red
-        lv_btnm_set_toggle(red_btnm, true, auton - 1);
-        lv_btnm_set_toggle(blue_btnm, false, 0);
-        lv_btnm_set_toggle(skills_btnm, false, 0);
-    } else { // blue
-        lv_btnm_set_toggle(red_btnm, false, 0);
-        lv_btnm_set_toggle(blue_btnm, true, -auton - 1);
-        lv_btnm_set_toggle(skills_btnm, false, 0);
-    }
-}
-
-void init(lv_obj_t* page, char** autons, int default_auton) {
+void init(lv_obj_t* page, const char** autons, int default_auton) {
     while (autons[auton_count][0] != '\0' && auton_count < MAX_AUTONS) {
         map[auton_count] = autons[auton_count];
         auton_count++;
@@ -65,8 +68,8 @@ void init(lv_obj_t* page, char** autons, int default_auton) {
     lv_btnm_set_map(red_btnm, map);
     lv_btnm_set_action(red_btnm, red_btnm_action);
     lv_obj_set_size(red_btnm, 450, 50);
-    lv_obj_set_pos(red_btnm, 0, 0);
-    lv_obj_align(red_btnm, NULL, LV_ALIGN_CENTER, 0, -50);
+    lv_obj_set_pos(red_btnm, 0, 20);
+    //lv_obj_align(red_btnm, NULL, LV_ALIGN_CENTER, 0, -50);
     lv_style_copy(&red_btnm_style, lv_theme_get_alien()->btnm.bg);
     red_btnm_style.body.border.color = lv_color_hsv_to_rgb(0, 60, 80);
     lv_btnm_set_style(red_btnm, LV_BTNM_STYLE_BG, &red_btnm_style);
@@ -78,8 +81,8 @@ void init(lv_obj_t* page, char** autons, int default_auton) {
     lv_btnm_set_map(blue_btnm, map);
     lv_btnm_set_action(blue_btnm, blue_btnm_action);
     lv_obj_set_size(blue_btnm, 450, 50);
-    lv_obj_set_pos(blue_btnm, 0, 50);
-    lv_obj_align(blue_btnm, NULL, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_pos(blue_btnm, 0, 70);
+    //lv_obj_align(blue_btnm, NULL, LV_ALIGN_CENTER, 0, 0);
     lv_style_copy(&blue_btnm_style, lv_theme_get_alien()->btnm.bg);
     blue_btnm_style.body.border.color = lv_color_hsv_to_rgb(240, 60, 80);
     lv_btnm_set_style(blue_btnm, LV_BTNM_STYLE_BG, &blue_btnm_style);
@@ -91,8 +94,8 @@ void init(lv_obj_t* page, char** autons, int default_auton) {
     lv_btnm_set_map(skills_btnm, skills_map);
     lv_btnm_set_action(skills_btnm, skills_btnm_action);
     lv_obj_set_size(skills_btnm, 450, 50);
-    lv_obj_set_pos(skills_btnm, 0, 100);
-    lv_obj_align(skills_btnm, NULL, LV_ALIGN_CENTER, 0, 50);
+    lv_obj_set_pos(skills_btnm, 0, 120);
+    //lv_obj_align(skills_btnm, NULL, LV_ALIGN_CENTER, 0, 50);
 
     render();
 }

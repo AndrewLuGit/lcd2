@@ -4,7 +4,7 @@
 #include "display/lvgl.h"
 
 namespace lcd2::selector {
-void init(lv_obj_t* page, char** autons, int default_auton);
+void init(lv_obj_t* page, const char** autons, int default_auton);
 int get_auton();
 }
 

@@ -9,7 +9,7 @@ namespace lcd2::pages {
 lv_obj_t* tab;
 int page_count = 0;
 
-void init(lv_obj_t* tabview, char** titles) {
+void init(lv_obj_t* tabview, const char** titles) {
     tab = tabview;
 
     while (titles[page_count][0] != '\0') {
@@ -23,7 +23,7 @@ void init(lv_obj_t* tabview, char** titles) {
         ext->style.body.padding.inner = 0;
         lv_obj_set_style(page, &ext->style);
 
-        for (int i = 0; i < LINES; i++) {
+        for (int i = 0; i < PAGE_LINES; i++) {
             ext->lines[i] = lv_label_create(page, NULL);
             lv_obj_align(ext->lines[i], NULL, LV_ALIGN_IN_TOP_LEFT, 5, 20 * (i + 1));
             lv_label_set_align(ext->lines[i], LV_LABEL_ALIGN_LEFT);
@@ -37,7 +37,7 @@ bool print_internal(int page, int line, const char* fmt, va_list args) {
     if (page < 0 || page >= page_count) {
         return false;
     }
-    if (line < 0 || line >= LINES) {
+    if (line < 0 || line >= PAGE_LINES) {
         return false;
     }
 
@@ -65,7 +65,7 @@ bool clear_line(int page, int line) {
     if (page < 0 || page >= page_count) {
         return false;
     }
-    if (line < 0 || line >= LINES) {
+    if (line < 0 || line >= PAGE_LINES) {
         return false;
     }
 
@@ -75,15 +75,21 @@ bool clear_line(int page, int line) {
 }
 
 bool clear_page(int page) {
-    for (int i = 0; i < LINES; i++) {
-        clear_line(page, i);
+    for (int i = 0; i < PAGE_LINES; i++) {
+         if (!clear_line(page, i)) {
+            return false;
+         }
     }
+    return true;
 }
 
 bool clear_all() {
     for (int i = 0; i < page_count; i++) {
-        clear_page(i);
+        if (!clear_page(i)) {
+            return false;
+        }
     }
+    return true;
 }
 
 bool set_background_color(int page, lv_color_t color) {

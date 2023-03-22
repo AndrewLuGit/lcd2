@@ -1,5 +1,6 @@
 #include "main.h"
 #include "lcd2/lcd2.h"
+#include "lcd2/log.h"
 
 /**
  * A callback function for LLEMU's center button.
@@ -25,6 +26,9 @@ void on_center_button() {
  */
 void initialize() {
 	lcd2::initialize();
+	for (int i = 1; i <= 10; i++) {
+		lcd2::log::print("Test " + std::to_string(i));
+	}
 }
 
 /**
@@ -72,15 +76,4 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	lcd2::print(1, "asyuigdguyduiashoidahjsuhakdskdahkjsdhakushduiahsuahskdhaksjdhaskjd");
-	lcd2::print(3, "hi");
-	lcd2::print(4, "hi");
-	lcd2::print(5, "hi");
-	lcd2::print(6, "hi");
-	lcd2::print(7, "hi");
-	while (true) {
-		lcd2::printf(0, "Seconds: %d", pros::millis() / 1000);
-		lcd2::printf(2, "Current Auton: %s", lcd2::auton);
-		pros::delay(10);
-	}
 }
