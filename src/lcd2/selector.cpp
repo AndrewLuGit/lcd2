@@ -18,7 +18,6 @@ const char* map[MAX_AUTONS + 1] = {};
 const char* skills_map[] = {"Skills", ""};
 
 void render() {
-    printf("Auton: %d\n", auton);
     if (auton == 0) { // skills
         lv_btnm_set_toggle(red_btnm, false, 0);
         lv_btnm_set_toggle(blue_btnm, false, 0);

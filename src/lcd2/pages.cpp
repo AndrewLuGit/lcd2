@@ -3,18 +3,21 @@
 #include "api.h"
 
 #define MAX_LINE_LENGTH 39
-#define PAGE_OFFSET 2
 
 namespace lcd2::pages {
 lv_obj_t* tab;
 int page_count = 0;
+std::vector<lv_obj_t*> exts = {};
 
 void init(lv_obj_t* tabview, const char** titles) {
     tab = tabview;
 
     while (titles[page_count][0] != '\0') {
         lv_obj_t* page = lv_tabview_add_tab(tabview, titles[page_count]);
-        page_ext_t* ext = (page_ext_t*) lv_obj_allocate_ext_attr(page, sizeof(page_ext_t));
+        lv_obj_t* page_ext = lv_obj_create(page, NULL);
+        lv_obj_set_hidden(page_ext, true);
+        exts.push_back(page_ext);
+        page_ext_t* ext = (page_ext_t*) lv_obj_allocate_ext_attr(page_ext, sizeof(page_ext_t));
         lv_page_set_sb_mode(page, LV_SB_MODE_OFF);
         lv_style_copy(&ext->style, lv_theme_get_alien()->bg);
         ext->style.text.font = &pros_font_dejavu_mono_20;
@@ -30,6 +33,7 @@ void init(lv_obj_t* tabview, const char** titles) {
             lv_label_set_long_mode(ext->lines[i], LV_LABEL_LONG_EXPAND);
             lv_label_set_text(ext->lines[i], "");
         }
+        page_count++;
     }
 }
 
@@ -41,7 +45,7 @@ bool print_internal(int page, int line, const char* fmt, va_list args) {
         return false;
     }
 
-    page_ext_t* ext = (page_ext_t*) lv_obj_get_ext_attr(lv_tabview_get_tab(tab, PAGE_OFFSET + page));
+    page_ext_t* ext = (page_ext_t*) lv_obj_get_ext_attr(exts[page]);
     char buf[MAX_LINE_LENGTH];
     vsnprintf(buf, MAX_LINE_LENGTH, fmt, args);
 
@@ -69,7 +73,7 @@ bool clear_line(int page, int line) {
         return false;
     }
 
-    page_ext_t* ext = (page_ext_t*) lv_obj_get_ext_attr(lv_tabview_get_tab(tab, PAGE_OFFSET + page));
+    page_ext_t* ext = (page_ext_t*) lv_obj_get_ext_attr(exts[page]);
     lv_label_set_text(ext->lines[line], "");
     return true;
 }
@@ -96,7 +100,7 @@ bool set_background_color(int page, lv_color_t color) {
     if (page < 0 || page >= page_count) {
         return false;
     }
-    page_ext_t* ext = (page_ext_t*) lv_obj_get_ext_attr(lv_tabview_get_tab(tab, PAGE_OFFSET + page));
+    page_ext_t* ext = (page_ext_t*) lv_obj_get_ext_attr(exts[page]);
     ext->style.body.main_color = color;
     ext->style.body.grad_color = color;
     return true;
@@ -106,7 +110,7 @@ bool set_text_color(int page, lv_color_t color) {
     if (page < 0 || page >= page_count) {
         return false;
     }
-    page_ext_t* ext = (page_ext_t*) lv_obj_get_ext_attr(lv_tabview_get_tab(tab, PAGE_OFFSET + page));
+    page_ext_t* ext = (page_ext_t*) lv_obj_get_ext_attr(exts[page]);
     ext->style.text.color = color;
     return true;
 }
