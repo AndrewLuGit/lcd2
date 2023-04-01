@@ -2,6 +2,7 @@
 #define _LCD2_PAGES_H_
 
 #include "display/lvgl.h"
+#include <string>
 
 #define PAGE_LINES 8
 
