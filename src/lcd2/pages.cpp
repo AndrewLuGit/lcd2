@@ -61,8 +61,8 @@ bool print_line(int page, int line, const char* fmt, ...) {
     return res;
 }
 
-bool set_line(int page, int line, const char* text) {
-    return print_line(page, line, "%s", text);
+bool set_line(int page, int line, std::string text) {
+    return print_line(page, line, "%s", text.c_str());
 }
 
 bool clear_line(int page, int line) {
