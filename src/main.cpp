@@ -26,7 +26,13 @@ void on_center_button() {
 void initialize() {
 	const char* autons[] = {"Front", "Back", "Do Nothing", ""};
 	const char* pages[] = {"Page 1", "Page 2", ""};
-	lcd2::initialize(autons, 0, pages);
+	lcd2::lcd2_parameters parameters = {
+		autons,
+		0,
+		false,
+		pages
+	};
+	lcd2::initialize(parameters);
 	for (int i = 1; i <= 10; i++) {
 		lcd2::log::print("Test " + std::to_string(i));
 	}

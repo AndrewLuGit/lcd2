@@ -2,7 +2,13 @@
 #define _LCD2_BASE_H_
 
 namespace lcd2 {
-void initialize(const char* autons[], int default_auto, const char* page_titles[]);
+struct lcd2_parameters {
+    const char** autons;
+    int default_auto;
+    bool enable_log;
+    const char** page_titles;
+};
+void initialize(lcd2_parameters parameters);
 }
 
 #endif

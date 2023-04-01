@@ -6,7 +6,7 @@
 
 namespace lcd2::log {
 void init(lv_obj_t* page);
-void print(std::string text);
+bool print(std::string text);
 }
 
 #endif

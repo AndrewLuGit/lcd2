@@ -6,6 +6,7 @@
 #define LOG_LINES 5
 
 namespace lcd2::log {
+bool initialized = false;
 std::list<std::string> history = {};
 auto pointer = history.begin();
 int index = 0;
@@ -55,9 +56,13 @@ void init(lv_obj_t* page) {
         lv_label_set_long_mode(lines[i], LV_LABEL_LONG_EXPAND);
         lv_label_set_text(lines[i], "");
     }
+    initialized = true;
 }
 
-void print(std::string text) {
+bool print(std::string text) {
+    if (!initialized) {
+        return false;
+    }
     history.push_back(text);
     if (history.size() == 1) {
         index = 0;
@@ -67,5 +72,6 @@ void print(std::string text) {
         pointer++;
     }
     render();
+    return true;
 }
 }

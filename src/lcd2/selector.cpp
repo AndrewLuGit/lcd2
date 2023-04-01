@@ -5,6 +5,7 @@
 #define MAX_AUTONS 10
 
 namespace lcd2::selector {
+bool initialized = false;
 int auton = 0;
 int auton_count = 0;
 lv_obj_t* red_btnm;
@@ -97,5 +98,6 @@ void init(lv_obj_t* page, const char** autons, int default_auton) {
     //lv_obj_align(skills_btnm, NULL, LV_ALIGN_CENTER, 0, 50);
 
     render();
+    initialized = true;
 }
 }
