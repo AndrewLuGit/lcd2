@@ -1,5 +1,5 @@
 #include "main.h"
-#include "lcd2/api.h"
+#include "lcd2/log.h"
 
 /**
  * A callback function for LLEMU's center button.
@@ -24,20 +24,12 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	const char* autons[] = {"Front", "Back", "Do Nothing", ""};
-	const char* pages[] = {"Page 1", "Page 2", ""};
-	lcd2::lcd2_parameters parameters = {
-		autons,
-		0,
-		false,
-		pages
-	};
-	lcd2::initialize(parameters);
-	for (int i = 1; i <= 10; i++) {
-		lcd2::log::print("Test " + std::to_string(i));
+	lv_obj_t* tab_view = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, LV_DPI / 2);
+	lv_obj_t* log_page = lv_tabview_add_tab(tab_view, "Log");
+    lcd2::log::init(log_page);
+	for (int i = 0; i < 10; i++) {
+		lcd2::log::print("Log " + std::to_string(i));
 	}
-	lcd2::pages::set_line(0,0,"Test");
-	lcd2::pages::set_background_color(1, LV_COLOR_BLUE);
 }
 
 /**
@@ -86,8 +78,6 @@ void autonomous() {}
  */
 void opcontrol() {
 	while (true) {
-		lcd2::pages::print_line(0,1, "Auton #: %d", lcd2::selector::get_auton());
-		lcd2::pages::print_line(1,0,"Seconds: %d", pros::millis() / 1000);
 		pros::delay(20);
 	}
 }

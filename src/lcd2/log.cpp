@@ -12,7 +12,7 @@ auto pointer = history.begin();
 int index = 0;
 lv_obj_t* btnm;
 lv_obj_t* lines[LOG_LINES];
-const char* btnmap[] = {SYMBOL_UP, SYMBOL_DOWN, ""};
+const char* btnmap[] = {LV_SYMBOL_UP, LV_SYMBOL_DOWN, ""};
 
 void render() {
     if (index < LOG_LINES || history.size() <= LOG_LINES) {
@@ -28,32 +28,30 @@ void render() {
     }
 }
 
-lv_res_t btnm_action(lv_obj_t* btnm, const char* text) {
-    if (!strcmp(text, SYMBOL_UP) && index > 0) { // up
+void btnm_action(lv_event_t *event) {
+    if (lv_btnmatrix_get_selected_btn(btnm) == 0 && index > 0) { // up
         index--;
         pointer--;
-    } else if (!strcmp(text, SYMBOL_DOWN) && index < history.size() - 1) { // down
+    } else if (lv_btnmatrix_get_selected_btn(btnm) == 1 && index < history.size() - 1) { // down
         index++;
         pointer++;
     }
 
     render();
-    return LV_RES_OK;
 }
 
 void init(lv_obj_t* page) {
-    btnm = lv_btnm_create(page, NULL);
-    lv_btnm_set_map(btnm, btnmap);
-    lv_btnm_set_action(btnm, btnm_action);
+    btnm = lv_btnmatrix_create(page);
+    lv_btnmatrix_set_map(btnm, btnmap);
+    lv_obj_add_event_cb(btnm, btnm_action, LV_EVENT_VALUE_CHANGED, NULL);
     lv_obj_set_size(btnm, 450, 50);
-    lv_obj_set_pos(btnm, 0, 20);
-    lv_obj_align(btnm, NULL, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_align(btnm, LV_ALIGN_TOP_MID, 0, 0);
 
     for (int i = 0; i < LOG_LINES; i++) {
-        lines[i] = lv_label_create(page,NULL);
-        lv_obj_align(lines[i], NULL, LV_ALIGN_IN_TOP_LEFT, 5, 70 + 20 * i);
-        lv_label_set_align(lines[i], LV_LABEL_ALIGN_LEFT);
-        lv_label_set_long_mode(lines[i], LV_LABEL_LONG_EXPAND);
+        lines[i] = lv_label_create(page);
+        lv_obj_set_width(lines[i], 480);
+        lv_obj_align(lines[i], LV_ALIGN_TOP_LEFT, 5, 70 + 20 * i);
+        lv_label_set_long_mode(lines[i], LV_LABEL_LONG_CLIP);
         lv_label_set_text(lines[i], "");
     }
     initialized = true;

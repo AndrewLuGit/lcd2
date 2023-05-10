@@ -8,7 +8,7 @@ namespace lcd2::pages {
 lv_obj_t* tab;
 int page_count = 0;
 std::vector<lv_obj_t*> exts = {};
-
+/*
 void init(lv_obj_t* tabview, const char** titles) {
     tab = tabview;
 
@@ -114,4 +114,5 @@ bool set_text_color(int page, lv_color_t color) {
     ext->style.text.color = color;
     return true;
 }
+*/
 }

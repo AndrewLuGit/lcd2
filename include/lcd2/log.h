@@ -1,7 +1,7 @@
 #ifndef _LCD2_LOG_H_
 #define _LCD2_LOG_H_
 
-#include "display/lvgl.h"
+#include "liblvgl/lvgl.h"
 #include <string>
 
 namespace lcd2::log {
