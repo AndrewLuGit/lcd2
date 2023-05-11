@@ -1,5 +1,6 @@
 #include "main.h"
 #include "lcd2/log.h"
+#include "lcd2/selector.h"
 
 /**
  * A callback function for LLEMU's center button.
@@ -24,9 +25,19 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	lv_obj_t* tab_view = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, LV_DPI / 2);
+/* 	lv_theme_t *th = lv_theme_default_init(lv_disp_get_default(),
+										lv_palette_main(LV_PALETTE_BLUE),
+										lv_palette_main(LV_PALETTE_RED),
+										true,
+										LV_FONT_DEFAULT); */
+	lv_theme_t *th = lv_theme_mono_init(lv_disp_get_default(), true, LV_FONT_DEFAULT);
+	lv_disp_set_theme(lv_disp_get_default(), th);
+	lv_obj_t* tab_view = lv_tabview_create(lv_scr_act(), LV_DIR_TOP, 3 * LV_DPI / 8);
 	lv_obj_t* log_page = lv_tabview_add_tab(tab_view, "Log");
     lcd2::log::init(log_page);
+	lv_obj_t* selector_page = lv_tabview_add_tab(tab_view, "Autons");
+	const char* autons[] = {"Front", "Back", "Do Nothing", ""};
+	lcd2::selector::init(selector_page, autons, 0);
 	for (int i = 0; i < 10; i++) {
 		lcd2::log::print("Log " + std::to_string(i));
 	}

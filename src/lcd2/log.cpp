@@ -3,7 +3,7 @@
 #include "api.h"
 #include <list>
 
-#define LOG_LINES 5
+#define LOG_LINES 6
 
 namespace lcd2::log {
 bool initialized = false;
@@ -29,7 +29,7 @@ void render() {
 }
 
 void btnm_action(lv_event_t *event) {
-    if (lv_btnmatrix_get_selected_btn(btnm) == 0 && index > 0) { // up
+    if (lv_btnmatrix_get_selected_btn(btnm) == 0 && index >= LOG_LINES) { // up
         index--;
         pointer--;
     } else if (lv_btnmatrix_get_selected_btn(btnm) == 1 && index < history.size() - 1) { // down
@@ -41,7 +41,15 @@ void btnm_action(lv_event_t *event) {
 }
 
 void init(lv_obj_t* page) {
+    lv_obj_set_style_pad_all(page, 6, 0);
+    lv_obj_set_style_pad_row(page, 6, 0);
+    lv_obj_set_style_pad_column(page, 6, 0);
+    lv_obj_clear_flag(page, LV_OBJ_FLAG_SCROLLABLE);
+    
     btnm = lv_btnmatrix_create(page);
+    lv_obj_set_style_pad_all(btnm, 6, 0);
+    lv_obj_set_style_pad_row(btnm, 6, 0);
+    lv_obj_set_style_pad_column(btnm, 6, 0);
     lv_btnmatrix_set_map(btnm, btnmap);
     lv_obj_add_event_cb(btnm, btnm_action, LV_EVENT_VALUE_CHANGED, NULL);
     lv_obj_set_size(btnm, 450, 50);
@@ -49,8 +57,8 @@ void init(lv_obj_t* page) {
 
     for (int i = 0; i < LOG_LINES; i++) {
         lines[i] = lv_label_create(page);
-        lv_obj_set_width(lines[i], 480);
-        lv_obj_align(lines[i], LV_ALIGN_TOP_LEFT, 5, 70 + 20 * i);
+        lv_obj_set_width(lines[i], 450);
+        lv_obj_align(lines[i], LV_ALIGN_TOP_MID, 0, 60 + 20 * i);
         lv_label_set_long_mode(lines[i], LV_LABEL_LONG_CLIP);
         lv_label_set_text(lines[i], "");
     }
